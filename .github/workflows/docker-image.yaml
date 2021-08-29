@@ -1,0 +1,64 @@
+name: Docker Image build CI
+
+on:
+  #push:
+  #  branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # get knxd repository tag
+    - uses: oprypin/find-latest-tag@v1
+      with:
+        repository: knxd/knxd
+        prefix: debian
+      id: knxdtag
+
+    # manipulate knxd repository tag
+    - uses: frabert/replace-string-action@v2.0
+      with:
+        pattern: '^debian\/(.+)$'
+        string: ${{ steps.knxdtag.outputs.tag }}
+        replace-with: '$1'
+      id: repotag
+
+    # prepare for multi arch images
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Docker Hub
+      # don't login to docker hub, if running with act
+      if: github.event_name != 'pull_request' && !env.ACT
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        logout: true
+    
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ secrets.DOCKERHUB_REPOSITORY }}
+        flavor: latest=true
+        # generate Docker tags based on the GitHub run number (for unique identification) and the knxd version
+        tags: |
+          type=raw,value=${{ github.run_number }}
+          type=raw,value=${{ steps.repotag.outputs.replaced }}
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64,linux/arm/v7
+        push: ${{ github.event_name != 'pull_request' && !env.ACT }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
