@@ -4,12 +4,13 @@ This repository is for building a Docker container of [knxd](https://github.com/
 
 ## Docker Image
 
-* The image uses [ubuntu](https://hub.docker.com/_/ubuntu) 20.04 as base image
+* The image uses [ubuntu](https://hub.docker.com/_/ubuntu) 22.04 as base image
 * The tag matches the tag of the [knxd repository](https://github.com/knxd/knxd/tags).
 * Image is available from Docker Hub in `linux/amd64`, `linux/arm64` and `linux/arm/v7` architectures.
 
 ## Installation
-1. Install Docker / Kubernetes / your choice of a container platform..
+
+1. Install Docker / Kubernetes / your choice of a container platform.
 1. Download: `docker pull anttin/knxd`
 1. Prepare [config file for knxd](https://github.com/knxd/knxd/blob/master/doc/inifile.rst)
 1. Run the container with Docker / docker-compose / kubernetes / etc. using your config file
@@ -114,9 +115,11 @@ spec:
 ```
 
 ## Building the image
+
 The images are available at [Docker Hub](https://hub.docker.com/r/anttin/knxd).
 
 To build it locally:
+
 ```shell
 docker build -t anttin/knxd github.com/anttin/knxd-docker
 ```
