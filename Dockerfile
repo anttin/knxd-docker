@@ -1,6 +1,6 @@
 ### Build build environment
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get upgrade -y
@@ -17,12 +17,12 @@ RUN dpkg-buildpackage -b -uc
 
 ### Build final container
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends libev4 libusb-1.0-0 gosu libfmt8 && \
+    apt-get install -y --no-install-recommends libev4 libusb-1.0-0 gosu libfmt9 libinih1 adduser && \
     mkdir -p /pkg
 COPY --from=0 /build/knxd_*.deb /pkg
 COPY --from=0 /build/knxd-tools_*.deb /pkg

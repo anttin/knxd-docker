@@ -2,18 +2,18 @@
 
 This repository is for building a Docker container of [knxd](https://github.com/knxd/knxd/).
 
-> **Note (February 2026):** This project has switched from Docker Hub to GitHub Container Registry. The Docker Hub images (`anttin/knxd`) will be removed in August 2026. Please update your deployments to use `ghcr.io/anttin/knxd-docker` instead.
+> **Note (February 2026):** This project has switched from Docker Hub to GitHub Container Registry. The Docker Hub images (`anttin/knxd`) will be removed in August 2026. Please update your deployments to use `ghcr.io/anttin/knxd` instead.
 
 ## Docker Image
 
-* The image uses [ubuntu](https://hub.docker.com/_/ubuntu) 22.04 as base image
+* The image uses [ubuntu](https://hub.docker.com/_/ubuntu) 24.04 as base image
 * The tag matches the tag of the [knxd repository](https://github.com/knxd/knxd/tags).
 * Image is available from GitHub Container Registry in `linux/amd64`, `linux/arm64` and `linux/arm/v7` architectures.
 
 ## Installation
 
 1. Install Docker / Kubernetes / your choice of a container platform.
-1. Download: `docker pull ghcr.io/anttin/knxd-docker`
+1. Download: `docker pull ghcr.io/anttin/knxd`
 1. Prepare [config file for knxd](https://github.com/knxd/knxd/blob/master/doc/inifile.rst)
 1. Run the container with Docker / docker-compose / kubernetes / etc. using your config file
 
@@ -24,7 +24,7 @@ You may give optional parameters for the knxd executable as the run arguments (c
 ### Docker run example
 
 ```shell
-docker run -d -p 0.0.0.0:6720:6720 -v /local/path/to/knxd.ini:/etc/knxd.ini ghcr.io/anttin/knxd-docker
+docker run -d -p 0.0.0.0:6720:6720 -v /local/path/to/knxd.ini:/etc/knxd.ini ghcr.io/anttin/knxd
 ```
 
 ### docker-compose example
@@ -33,7 +33,7 @@ docker run -d -p 0.0.0.0:6720:6720 -v /local/path/to/knxd.ini:/etc/knxd.ini ghcr
 version: '3.4'
 services:
   knxd:
-    image: ghcr.io/anttin/knxd-docker
+    image: ghcr.io/anttin/knxd
     container_name: knxd
     volumes:
       - /local/path/to/knxd.ini:/etc/knxd.ini
@@ -88,7 +88,7 @@ spec:
     spec:
       containers:
       - name: knxd
-        image: ghcr.io/anttin/knxd-docker:latest
+        image: ghcr.io/anttin/knxd:latest
         args: ["/knxd/knxd.ini"]
         ports:
           - containerPort: 6720
@@ -118,10 +118,10 @@ spec:
 
 ## Building the image
 
-The images are available at [GitHub Container Registry](https://github.com/anttin/knxd-docker/pkgs/container/knxd-docker).
+The images are available at [GitHub Container Registry](https://github.com/anttin/knxd-docker/pkgs/container/knxd).
 
 To build it locally:
 
 ```shell
-docker build -t ghcr.io/anttin/knxd-docker github.com/anttin/knxd-docker
+docker build -t ghcr.io/anttin/knxd github.com/anttin/knxd-docker
 ```
