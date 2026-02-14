@@ -22,14 +22,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends libev4 libusb-1.0-0 gosu libfmt9 libinih1 adduser && \
+    apt-get install -y --no-install-recommends libev4t64 libusb-1.0-0 gosu libfmt9 && \
     mkdir -p /pkg
+
 COPY --from=0 /build/knxd_*.deb /pkg
 COPY --from=0 /build/knxd-tools_*.deb /pkg
-RUN dpkg -i /pkg/knxd_*.deb /pkg/knxd-tools_*.deb && \
+
+RUN apt-get install -y --no-install-recommends /pkg/knxd_*.deb /pkg/knxd-tools_*.deb && \
     apt-get clean -y && \
     apt-get autoclean -y && \
-    apt-get autoremove && \
+    apt-get autoremove -y && \
     rm -rf /pkg
 WORKDIR /usr/local/bin
 COPY knxd.ini /etc/knxd.ini
