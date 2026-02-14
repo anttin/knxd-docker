@@ -35,20 +35,21 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Login to Docker Hub
-      # don't login to docker hub, if running with act
+    - name: Login to GitHub Container Registry
+      # don't login to GHCR, if running with act
       if: github.event_name != 'pull_request' && !env.ACT
       uses: docker/login-action@v1
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
         logout: true
     
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: ${{ secrets.DOCKERHUB_REPOSITORY }}
+        images: ghcr.io/${{ github.repository }}
         flavor: latest=true
         # generate Docker tags based on the GitHub run number (for unique identification) and the knxd version
         tags: |
